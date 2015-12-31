@@ -1,7 +1,9 @@
 ---
 title: $0^{\text {th}}$ order model for competing microbes
 author: Eric Jones
-#format: beamer
+format: beamer
+header-includes:
+- \usepackage[]{algorithm2e}
 ...
 
 
@@ -52,3 +54,30 @@ Fitting Data
 \end{align*}
 + From the experimental design, we should know $\beta$ and $N_0$
 + We need to fit ${\red \gamma, \ K}$, and ${\red \mu}$ from data
+
+"Experimental" Data
+===================
+![Data from model with random fluctuations](one_microbe.pdf)
+
+Univariate Bayesian Parameter Estimation
+==========================================
+\KwData{$\hat{y}$ dependent on $\theta_\text{true}$ at $n$ time-steps, with
+model $y(\theta_\text{guess})$ at any time-steps}
+set range for possible $\theta$ values ($[\theta] = [\theta_\text{min}, \ldots,
+\theta_\text{max}]$)\; \
+\For{each $\theta[i]$}{
+    \textit{set initial uniform prior:}\; \\
+    probability[i,0] = 1\; \\
+    \For{each timestep $j$}{
+        $y_{i,j} = y(\theta[i])|_{t=j}$\; \\
+        \textit{compare data to proposed $\theta$ value}:\; \\
+        distance$[i,j]$ = \texttt{normalpdf}($\hat{y}(t=j), \mu=y_{i,j},
+        \sigma^2 = 1 )$\; \\
+        probability$[i,j]$ = probability$[i,j-1]$*distance$[i,j]$
+    }
+}
+normalize probabilities;
+
+**As the number of time steps increases, the probability distributions over
+$\theta$ should approach $\theta_\text{true}$**
+
